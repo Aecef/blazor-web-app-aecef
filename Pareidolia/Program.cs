@@ -1,5 +1,6 @@
 using Pareidolia.Components;
 using MudBlazor.Services;
+using Pareidolia.Services.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
+
+// Custom Services
+builder.Services.AddScoped<PocketBaseService>();
 
 var app = builder.Build();
 
