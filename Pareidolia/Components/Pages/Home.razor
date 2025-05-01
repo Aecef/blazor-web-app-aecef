@@ -1,6 +1,7 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 
+@using Pareidolia.Models
 @using Pareidolia.Services.Data
 @inject PocketBaseService PbService
 
@@ -11,19 +12,21 @@
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CheckWeights">Weights</MudButton>
 
 <MudText>
-    @if (string.IsNullOrEmpty(response))
+    @if (response.Count < 1)
     {
         <p><em>Loading...</em></p>
     }
     else
     {
         @foreach ( var item in response){
-            <h1>@item</h1>
+            <h1>@item.user</h1>
+            <h1>@item.created</h1>
+            <MudText Typo="Typo.body1">@item.weight</MudText>
         }
     }
 </MudText>
 @code {
-    private string response = string.Empty;
+    private List<WeightModel> response = new List<WeightModel>();
     protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
@@ -31,6 +34,7 @@
     }
 
     public async Task CheckWeights(){
-        var response= await PbService.GetDataAsync();
+       response = await PbService.GetDataAsync();
+
     }
 }

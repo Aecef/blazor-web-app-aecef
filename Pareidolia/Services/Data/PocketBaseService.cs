@@ -1,6 +1,6 @@
 ﻿using PocketBaseCore;
-using System.Text.Json;
 using System.Text.Json.Nodes;
+using Pareidolia.Models;
 
 namespace Pareidolia.Services.Data
 {
@@ -23,10 +23,30 @@ namespace Pareidolia.Services.Data
                 throw new Exception($"Error authenticating to PocketBase: {ex.Message}");
             }
         }
-        public async Task<List<JsonNode>> GetDataAsync()
+        public async Task<List<WeightModel>> GetDataAsync()
         {
             var weights = await _pocketBaseClient.GetRecordsAsync<JsonNode>("weights");
-            return weights.Items;
+            if (weights == null || weights.Items == null)
+            {
+                throw new Exception("No data found in PocketBase.");
+            }
+            // Parse the date into WeightModel objects
+            var weightModels = new List<WeightModel>();
+            foreach (var item in weights.Items)
+            {
+                var weightModel = new WeightModel(
+                    collectionId: item["collectionId"]?.ToString() ?? "",
+                    collectionName: item["collectionName"]?.ToString() ?? "",
+                    created: DateTime.Parse(item["created"]?.ToString() ?? DateTime.Now.ToString()),
+                    id: item["id"]?.ToString() ?? "",
+                    updated: DateTime.Parse(item["updated"]?.ToString() ?? DateTime.Now.ToString()),
+                    user: item["user"]?.ToString() ?? "",
+                    weight: float.Parse(item["weight"]?.ToString() ?? "0"),
+                    etc: item["etc"]?.ToString() ?? ""
+                );
+                weightModels.Add(weightModel);
+            }
+            return weightModels;
 
         }
     }
