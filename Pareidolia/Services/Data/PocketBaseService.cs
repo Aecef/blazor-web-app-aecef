@@ -7,12 +7,14 @@ namespace Pareidolia.Services.Data
     public class PocketBaseService
     {
         private readonly PocketBaseClient _pocketBaseClient;
-        private readonly string _baseUrl;
-        private readonly string _password = "";
-        private readonly string _identity = "";
+        private readonly string _baseUrl = string.Empty;
+        private readonly string _password = string.Empty;
+        private readonly string _identity = string.Empty;
         public PocketBaseService()
         {
-            _baseUrl = "https://pocketbase-chh.fly.dev/_/";
+            _baseUrl = Environment.GetEnvironmentVariable("POCKETBASE_URL") ?? "" ;
+            _identity = Environment.GetEnvironmentVariable("POCKETBASE_IDENTITY") ?? "";
+            _password = Environment.GetEnvironmentVariable("POCKETBASE_PASSWORD") ?? "";
             _pocketBaseClient = new PocketBaseClient(_baseUrl);
         }
 

@@ -1,7 +1,9 @@
 using Pareidolia.Components;
 using MudBlazor.Services;
 using Pareidolia.Services.Data;
+using dotenv.net;
 
+DotEnv.Load(); // Load environment variables from .env file
 
 var builder = WebApplication.CreateBuilder(args);
 
